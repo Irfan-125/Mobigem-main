@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mobi Gems - Idle Clicker</title>
+<style>
+:root{color-scheme:dark;--bg:#090d16;--cd:rgba(23,30,49,.85);--bd:rgba(255,255,255,.09);--tx:#f1f4fb;--mu:#8e9ab8;--c1:#06b6d4;--c2:#8b5cf6;--gold:#fbbf24}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:radial-gradient(circle at 50% -10%,#1b2450,#090d16 60%) fixed;color:var(--tx);font-family:system-ui,-apple-system,sans-serif;padding:max(12px,env(safe-area-inset-top)) 12px 40px}
+.w{max-width:520px;margin:auto}
+.hd{display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px}.logo b{color:var(--c1)}
+.lv{font-size:12px;color:var(--mu);text-align:right}
+.bar{height:6px;background:#1c2540;border-radius:9px;overflow:hidden;margin-top:4px;width:110px;margin-left:auto}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--c2),var(--c1));width:0}
+.tot{text-align:center;margin:14px 0 2px;font-size:44px;font-weight:800;letter-spacing:-1px;user-select:none}
+.ps{text-align:center;color:var(--mu);font-size:14px}
+#fr{text-align:center;color:var(--gold);font-weight:700;height:20px;font-size:13px}
+.arena{position:relative;height:250px;display:flex;align-items:center;justify-content:center;user-select:none}
+#gem{font-size:140px;line-height:1;cursor:pointer;transition:transform .08s;filter:drop-shadow(0 0 28px rgba(6,182,212,.55));animation:fl 3s ease-in-out infinite}
+#gem.p{transform:scale(.88)}
+@keyframes fl{50%{translate:0 -8px}}
+.fx{position:absolute;pointer-events:none;font-weight:800;color:#fff;text-shadow:0 0 8px var(--c1);animation:up .9s forwards}
+@keyframes up{to{transform:translateY(-90px);opacity:0}}
+#gold{position:absolute;font-size:46px;cursor:pointer;display:none;animation:pu 1s infinite;z-index:5}
+@keyframes pu{50%{scale:1.2}}
+.tabs{display:flex;gap:6px;margin:6px 0 10px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:1 0 auto;background:var(--cd);border:1px solid var(--bd);color:var(--mu);padding:9px 12px;border-radius:12px;font:600 12px inherit;font-family:inherit}
+.tabs button.on{color:#fff;border-color:var(--c1)}
+.pn{display:none}.pn.on{display:block}
+.it{display:flex;align-items:center;gap:10px;background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:10px;margin-bottom:8px}
+.it .ic{font-size:28px;width:38px;text-align:center}.it .in{flex:1;min-width:0}
+.it b{display:block;font-size:14px}.it small{color:var(--mu);font-size:11px}
+button.pr,.it button{background:linear-gradient(135deg,var(--c2),var(--c1));border:0;color:#fff;font:700 13px inherit;font-family:inherit;padding:9px 12px;border-radius:10px;min-width:78px}
+button:disabled{background:#222b45!important;color:#5d6a8c!important}
+.it.dn{opacity:.5}.it.dn .ic{filter:grayscale(1)}
+.cd{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:8px}
+.cd input{width:100%;background:#0e1424;border:1px solid var(--bd);color:#fff;border-radius:10px;padding:10px;margin-bottom:8px;font-size:14px}
+.row{display:flex;gap:8px}.row button{flex:1}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sg button{border:0;border-radius:12px;padding:13px 6px;color:#fff;font:700 13px inherit;font-family:inherit}
+.lb{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--bd);font-size:14px}.lb:first-child{border-top:0}
+.ad{margin-top:14px;min-height:60px;border:1px dashed var(--bd);border-radius:12px;color:var(--mu);font-size:11px;text-align:center;padding:6px}
+#toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-90px);background:#1b2450;border:1px solid var(--c1);padding:10px 16px;border-radius:12px;font-size:13px;transition:transform .3s;z-index:9;max-width:90%;text-align:center}
+#toast.s{transform:translate(-50%,0)}
+p{font-size:13px;color:var(--mu);line-height:1.5;margin:6px 0}
+.rs{text-align:center;margin-top:20px}.rs button{background:none;border:0;color:#46526f;font-size:11px}
+</style>
+</head>
+<body><div class="w">
+<div class="hd"><div class="logo">Mobi<b>Gems</b></div><div class="lv">Level <span id="lv">1</span> · <span id="rk"></span><div class="bar"><i id="xp"></i></div></div></div>
+<div class="tot">💎 <span id="g">0</span></div>
+<div class="ps"><span id="cps">0</span> gems / sec · <span id="tv">1</span> per tap</div>
+<div id="fr"></div>
+<div class="arena" id="ar"><div id="gem">💎</div><div id="gold">🌟</div></div>
+<div class="tabs"><button class="on" data-p="sh">Miners</button><button data-p="up">Boosts</button><button data-p="aw">Awards</button><button data-p="tp">Top</button><button data-p="shr">Share</button><button data-p="rb">Rebirth</button></div>
+<div class="pn on" id="sh"></div>
+<div class="pn" id="up"></div>
+<div class="pn" id="aw"><div class="it"><div class="ic">🎁</div><div class="in"><b>Daily gift</b><small>Once a day: 10 minutes of free mining</small></div><button id="dg">Open</button></div><div id="al"></div></div>
+<div class="pn" id="tp">
+ <div class="cd" id="acc" style="display:none"></div>
+ <div class="cd"><b>🏆 Top players</b><div id="lbl" style="margin-top:8px"><p>Loading...</p></div><button class="pr" style="width:100%;margin-top:8px" onclick="loadTop()">Refresh</button></div>
+ <p>Login is optional. Without login you play on this phone only.</p>
+</div>
+<div class="pn" id="shr">
+ <div class="cd"><b>Invite your friends</b><p>Challenge them to beat your gems!</p>
+ <div class="sg">
+ <button style="background:#25d366" onclick="sh('wa')">WhatsApp</button>
+ <button style="background:#0084ff" onclick="sh('ms')">Messenger</button>
+ <button style="background:#1877f2" onclick="sh('fb')">Facebook</button>
+ <button style="background:#229ed9" onclick="sh('tg')">Telegram</button>
+ <button style="background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af)" onclick="sh('n')">Instagram</button>
+ <button style="background:#111;border:1px solid #444" onclick="sh('n')">TikTok</button>
+ <button class="pr" style="grid-column:span 2" onclick="sh('n')">📤 More apps</button>
+ <button style="grid-column:span 2;background:#222b45" onclick="sh('cp')">🔗 Copy link</button>
+ </div><p>Instagram and TikTok open your phone's share menu. If your phone does not show it, the link is copied so you can paste it in a chat or bio.</p></div>
+</div>
+<div class="pn" id="rb"><div class="it"><div class="ic">⭐</div><div class="in"><b>Rebirth</b><small id="rbt"></small></div><button id="rbb">Rebirth</button></div><p>Rebirth resets your gems, miners and boosts, but every Star permanently adds +5% to all mining. You keep your awards.</p><p><b>About Mobi Gems:</b> a serene idle game about collecting virtual gems. Gems are purely for fun and have no monetary value.</p></div>
+<div class="ad" id="ad1"><!-- Adsterra banner code here --></div>
+<div class="rs"><button id="rst">Reset game</button></div>
+</div><div id="toast"></div>
+<script>
+var K="mobigems2",P=[1,5,25,120,600,3000,16000,90000,500000,3e6,2e7,1.3e8,9e8,6e9],C=[20,150,1100,8000,60000,450000,3e6,2.2e7,1.6e8,1.2e9,9e9,7e10,5e11,4e12],
+N=[["Mini Miner","⛏️"],["Drill","🔩"],["Gem Cart","🛒"],["Crystal Cave","🕳️"],["Gem Factory","🏭"],["Portal","🌀"],["Robot Digger","🤖"],["Dragon Hoard","🐉"],["Space Station","🛰️"],["Galaxy Mine","🌌"],["Time Machine","⏳"],["Rift Portal","🔮"],["Cosmic Forge","☄️"],["Universe Engine","♾️"]],
+RK=["Pebble","Digger","Prospector","Jeweler","Tycoon","Legend"],
+BO=[["tp","Strong Fingers","👆","+1 gem per tap",40,1.75,0],["mag","Gem Magnet","🧲","+10% all mining",1500,2.5,0],["at","Auto Tapper","🦾","Taps for you (+0.5 tap/sec)",1500,2,0],["cr","Crit Gloves","🥊","+4% chance of 5x tap",3000,2.2,10],["lk","Lucky Charm","🍀","Golden gems appear sooner",5000,2.5,8],["ho","Hammock","🛏️","Better offline mining",10000,2.5,5],["gt","Golden Touch","✨","Frenzy lasts +5s",20000,3,6],["un","Miner Union","🤝","+15% miner output",12000,2.6,0],["rd","Treasure Radar","📡","Golden gems stay 2s longer",8000,2.4,5],["ts","Tap Storm","⚡","Taps gain 1% of miner output",25000,2.4,10],["bh","Bargain Hunter","🏷️","Miners cost 2% less",50000,3,10]];
+function DEF(){return{g:0,life:0,run:0,taps:0,tp:1,mag:0,b:[0,0,0,0,0,0,0,0,0,0,0,0,0,0],stars:0,ach:{},t:Date.now(),dg:"",u:{},gc:0,sh:0}}
+var s=DEF(),fz=0,user=null;
+try{var r=localStorage.getItem(K);if(r)s=Object.assign(DEF(),JSON.parse(r))}catch(e){}
+while(s.b.length<14)s.b.push(0);
+function $(i){return document.getElementById(i)}
+function f(n){if(n<1e3)return n<10&&n%1?n.toFixed(1):Math.floor(n)+"";var u=["K","M","B","T","Q"],i=-1;while(n>=1e3&&i<4){n/=1e3;i++}return n.toFixed(n<10?2:n<100?1:0)+u[i]}
+function ac(){return Object.keys(s.ach).length}
+function nb(){return s.b.reduce(function(a,b){return a+b})}
+function L(){return Math.floor(Math.sqrt(s.life/100))+1}
+function lv(k){return k=="tp"?s.tp-1:k=="mag"?s.mag:(s.u[k]||0)}
+function inc(k){if(k=="tp")s.tp++;else if(k=="mag")s.mag++;else s.u[k]=lv(k)+1}
+function mu(){return(1+.05*s.stars)*(1+.1*s.mag)*(1+.01*ac())*(Date.now()<fz?5:1)}
+function raw(){var t=0;for(var i=0;i<14;i++)t+=s.b[i]*P[i];return t*(1+.15*lv("un"))}
+function tv(){return(s.tp+lv("ts")*.01*raw())*mu()}
+function cps(){return raw()*mu()+lv("at")*.5*tv()}
+function cost(i){return Math.ceil(C[i]*Math.pow(1.18,s.b[i])*(1-.02*lv("bh")))}
+function bc(o){return Math.ceil(o[4]*Math.pow(o[5],lv(o[0])))}
+function gain(n){s.g+=n;s.life+=n;s.run+=n}
+function sv(){s.t=Date.now();try{localStorage.setItem(K,JSON.stringify(s))}catch(e){}}
+function toast(m){var t=$("toast");t.textContent=m;t.className="s";clearTimeout(t.h);t.h=setTimeout(function(){t.className=""},2800)}
+var gem=$("gem");
+gem.addEventListener("pointerdown",function(e){e.preventDefault();var v=tv(),c=Math.random()<.04*lv("cr");if(c)v*=5;gain(v);s.taps++;
+ gem.classList.add("p");setTimeout(function(){gem.classList.remove("p")},80);
+ var a=$("ar").getBoundingClientRect(),d=document.createElement("div");
+ d.className="fx";d.textContent=(c?"CRIT! +":"+")+f(v);d.style.left=(e.clientX-a.left-10)+"px";d.style.top=(e.clientY-a.top-30)+"px";$("ar").appendChild(d);setTimeout(function(){d.remove()},900);if(navigator.vibrate)navigator.vibrate(8)});
+function build(){
+ var h="";N.forEach(function(n,i){h+='<div class="it"><div class="ic">'+n[1]+'</div><div class="in"><b>'+n[0]+' <span id="n'+i+'"></span></b><small>+'+f(P[i])+' gems/sec each</small></div><button id="bb'+i+'" onclick="buy('+i+')"></button></div>'});$("sh").innerHTML=h;
+ h="";BO.forEach(function(o,i){h+='<div class="it"><div class="ic">'+o[2]+'</div><div class="in"><b>'+o[1]+' <span id="bn'+i+'"></span></b><small>'+o[3]+'</small></div><button id="bk'+i+'" onclick="bu('+i+')"></button></div>'});$("up").innerHTML=h;
+ var T=function(n,d,fn){return[n,d,fn]};
+ window.A=[T("Pocket Money","Mine 100 gems",function(){return s.life>=100}),T("Stash","Mine 10K gems",function(){return s.life>=1e4}),T("Hoard","Mine 1M gems",function(){return s.life>=1e6}),T("Dragon Vault","Mine 1B gems",function(){return s.life>=1e9}),T("Gem God","Mine 1T gems",function(){return s.life>=1e12}),
+ T("Finger Workout","Tap 200 times",function(){return s.taps>=200}),T("Tap Master","Tap 2000 times",function(){return s.taps>=2e3}),T("Tap Legend","Tap 20000 times",function(){return s.taps>=2e4}),
+ T("Small Crew","Own 10 miners",function(){return nb()>=10}),T("Industrialist","Own 50 miners",function(){return nb()>=50}),T("Empire","Own 200 miners",function(){return nb()>=200}),T("Full Roster","Own every type of miner",function(){return s.b.every(function(x){return x>0})}),
+ T("Reborn","Earn your first Star",function(){return s.stars>=1}),T("Star Collector","Own 5 Stars",function(){return s.stars>=5}),
+ T("Rising","Reach level 10",function(){return L()>=10}),T("Veteran","Reach level 30",function(){return L()>=30}),
+ T("Lucky","Catch 5 golden gems",function(){return s.gc>=5}),T("Star Hunter","Catch 25 golden gems",function(){return s.gc>=25}),
+ T("Upgrade Addict","Reach 15 boost levels",function(){return lv("tp")+s.mag+Object.keys(s.u).reduce(function(a,k){return a+s.u[k]},0)>=15}),
+ T("Cosmic Hoarder","Mine 1Qa gems",function(){return s.life>=1e15}),T("Banker","Hold 1B gems at once",function(){return s.g>=1e9}),T("Finger of God","Tap 100000 times",function(){return s.taps>=1e5}),T("Megacorp","Own 500 miners",function(){return nb()>=500}),T("Collector","Own 25 of every miner",function(){return s.b.every(function(x){return x>=25})}),T("Grandmaster","Reach level 50",function(){return L()>=50}),T("Constellation","Own 10 Stars",function(){return s.stars>=10}),T("Gold Rush","Catch 100 golden gems",function(){return s.gc>=100}),T("Max Power","Reach 60 boost levels",function(){return lv("tp")+s.mag+Object.keys(s.u).reduce(function(a,k){return a+s.u[k]},0)>=60}),T("Gift Opener","Open your daily gift",function(){return s.dg!==""}),T("Social Butterfly","Share the game once",function(){return s.sh>0}),T("Cloud Keeper","Log in to save online",function(){return !!user})];
+ h="";A.forEach(function(a,i){h+='<div class="it" id="a'+i+'"><div class="ic">🏅</div><div class="in"><b>'+a[0]+'</b><small>'+a[1]+' · +1% mining</small></div></div>'});$("al").innerHTML=h}
+function buy(i){var c=cost(i);if(s.g>=c){s.g-=c;s.b[i]++;ui()}}
+function bu(i){var o=BO[i],c=bc(o);if(s.g>=c&&(!o[6]||lv(o[0])<o[6])){s.g-=c;inc(o[0]);ui()}}
+function ui(){
+ $("g").textContent=f(s.g);$("cps").textContent=f(cps());$("tv").textContent=f(tv());
+ var l=L(),cur=Math.pow(l-1,2)*100,nx=Math.pow(l,2)*100;
+ $("lv").textContent=l;$("rk").textContent=RK[Math.min(5,Math.floor(l/6))];$("xp").style.width=((s.life-cur)/(nx-cur)*100)+"%";
+ for(var i=0;i<14;i++){$("n"+i).textContent="x"+s.b[i];var b=$("bb"+i),c=cost(i);b.textContent="💎 "+f(c);b.disabled=s.g<c}
+ BO.forEach(function(o,i){var c=bc(o),mx=o[6]&&lv(o[0])>=o[6];$("bn"+i).textContent="Lv"+lv(o[0]);var b=$("bk"+i);b.textContent=mx?"MAX":"💎 "+f(c);b.disabled=mx||s.g<c});
+ var st=Math.floor(Math.sqrt(s.run/1e6));$("rbt").textContent="Stars: "+s.stars+" · Gain now: +"+st+" (needs 1M gems this run)";$("rbb").disabled=st<1;
+ $("dg").disabled=s.dg===new Date().toDateString();
+ A.forEach(function(a,i){$("a"+i).className="it"+(s.ach[i]?"":" dn")});
+ $("fr").textContent=Date.now()<fz?"🔥 FRENZY x5 · "+Math.ceil((fz-Date.now())/1e3)+"s":""}
+function chk(){A.forEach(function(a,i){if(!s.ach[i]&&a[2]()){s.ach[i]=1;toast("🏅 Award: "+a[0])}})}
+$("rbb").onclick=function(){var st=Math.floor(Math.sqrt(s.run/1e6));if(st<1||!confirm("Rebirth for +"+st+" Stars?"))return;s.stars+=st;s.g=0;s.run=0;s.tp=1;s.mag=0;s.u={};s.b=DEF().b;toast("⭐ Reborn! +"+st+" Stars");ui();sv()};
+$("dg").onclick=function(){s.dg=new Date().toDateString();var v=Math.max(500,cps()*600);gain(v);toast("🎁 Daily gift: +"+f(v)+" gems");ui();sv()};
+$("rst").onclick=function(){if(confirm("Delete all progress on this phone?")){try{localStorage.removeItem(K)}catch(e){}location.reload()}};
+document.querySelectorAll(".tabs button").forEach(function(b){b.onclick=function(){adTrig();document.querySelectorAll(".tabs button").forEach(function(x){x.classList.toggle("on",x===b)});document.querySelectorAll(".pn").forEach(function(p){p.classList.toggle("on",p.id===b.dataset.p)});if(b.dataset.p=="tp")loadTop()}});
+var gd=$("gold");
+function spawn(){var a=$("ar");gd.style.left=Math.random()*(a.clientWidth-60)+"px";gd.style.top=Math.random()*(a.clientHeight-60)+"px";gd.style.display="block";gd.h=setTimeout(function(){gd.style.display="none";nextG()},9000+2000*lv("rd"))}
+function nextG(){setTimeout(spawn,Math.max(25000,70000+Math.random()*60000-lv("lk")*6000))}
+gd.addEventListener("pointerdown",function(e){e.preventDefault();clearTimeout(gd.h);gd.style.display="none";s.gc++;
+ if(Math.random()<.5){fz=Date.now()+20000+lv("gt")*5000;toast("🔥 Frenzy! Mining x5")}else{var v=cps()*300+100;gain(v);toast("🌟 Lucky gems: +"+f(v))}nextG();ui()});
+/* ads: max 2 per day, 30 min apart, no reward */
+var SL=["https://asiafilm.org/4/7337acf5ad421786f2adfe57fcb7beb4","https://asiafilm.org/4/ecb78601d0d901220e7c842cd80126d0"];
+function adTrig(){try{var d=new Date().toDateString(),a=JSON.parse(localStorage.getItem("mgad")||"{}");if(a.d!==d)a={d:d,n:0,t:0};if(a.n>=2||Date.now()-a.t<18e5)return;a.n++;a.t=Date.now();localStorage.setItem("mgad",JSON.stringify(a));window.open(SL[a.n%2],"_blank");window.focus()}catch(e){}}
+/* share */
+function url(){return location.origin+location.pathname}
+function txt(){return "I have mined "+f(s.life)+" gems in Mobi Gems 💎 Can you beat me?"}
+function cpy(){var u=url();try{navigator.clipboard.writeText(u).then(function(){toast("Link copied!")},old)}catch(e){old()}function old(){var t=document.createElement("input");t.value=u;document.body.appendChild(t);t.select();try{document.execCommand("copy");toast("Link copied!")}catch(e){toast(u)}t.remove()}}
+function sh(k){var u=encodeURIComponent(url()),t=encodeURIComponent(txt()),w;
+ if(k=="cp"){cpy()}
+ else if(k=="n"){if(navigator.share)navigator.share({title:"Mobi Gems",text:txt(),url:url()}).catch(function(){});else{cpy();toast("Link copied. Paste it in Instagram or TikTok")}}
+ else{w={wa:"https://wa.me/?text="+t+"%20"+u,ms:"fb-messenger://share/?link="+u,fb:"https://www.facebook.com/sharer/sharer.php?u="+u,tg:"https://t.me/share/url?url="+u+"&text="+t}[k];location.href=w}
+ if(!s.sh){s.sh=1;chk();ui()}}
+/* cloud (optional login) */
+function nm(u){return(u.displayName||u.email.split("@")[0]).split(" ")[0].slice(0,12)}
+function accUI(){var a=$("acc");if(!window.FB){a.style.display="none";return}a.style.display="block";
+ a.innerHTML=user?'<b>☁️ Saved online</b><p>Logged in as '+nm(user)+'. Your progress and rank sync automatically.</p><button class="pr" onclick="FB.out()">Log out</button>':
+ '<b>Login (optional)</b><p>Save progress online and join the leaderboard.</p><button class="pr" style="width:100%;margin-bottom:8px" onclick="FB.google().catch(er)">Continue with Google</button><input id="em" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password (6+ characters)"><div class="row"><button class="pr" onclick="FB.email($(\'em\').value,$(\'pw\').value,0).catch(er)">Login</button><button class="pr" onclick="FB.email($(\'em\').value,$(\'pw\').value,1).catch(er)">Sign up</button></div>'}
+function er(e){toast("Login failed: "+((e&&e.code||"").replace("auth/","")||"try again"))}
+function cs(){if(user&&window.FB)FB.save(user.uid,s,nm(user)).catch(function(){})}
+window.onFB=function(){accUI();loadTop()};
+window.onUser=function(u){user=u;accUI();if(u){FB.load(u.uid).then(function(d){if(d){var c=JSON.parse(d);if(c.life>s.life){s=Object.assign(DEF(),c);while(s.b.length<14)s.b.push(0);toast("Progress loaded from your account")}}chk();ui();sv();cs()}).catch(function(){})}};
+function loadTop(){var el=$("lbl");if(!window.FB){el.innerHTML="<p>Online leaderboard is not available yet.</p>";return}
+ FB.top().then(function(a){el.innerHTML=a.length?a.map(function(p,i){return'<div class="lb"><span>'+(i+1)+'. '+String(p.name).replace(/[<>&]/g,"")+' · ⭐'+(p.stars||0)+'</span><b>💎 '+f(p.life)+'</b></div>'}).join(""):"<p>No players yet. Log in to be the first!</p>"}).catch(function(){el.innerHTML="<p>Could not load. Try again.</p>"})}
+build();
+var off=Math.min((Date.now()-s.t)/1e3,7200+3600*lv("ho"));if(off>60&&cps()>0){var og=cps()*off*(.3+.1*lv("ho"));gain(og);toast("Welcome back! Miners found "+f(og)+" gems while you were away")}
+chk();ui();nextG();accUI();loadTop();
+var tk=0;setInterval(function(){gain(cps()/10);if(++tk%10==0){chk();sv()}if(tk%300==0)cs();ui()},100);
+document.addEventListener("visibilitychange",function(){if(document.hidden){sv();cs()}});
+</script>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,GoogleAuthProvider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,collection,query,orderBy,limit,getDocs}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+/* Firebase config */
+const cfg={apiKey:"AIzaSyC5-9bVQE989BV_DLRpcchE4rxP-dM2YrA",authDomain:"vaultcoinapp.firebaseapp.com",projectId:"vaultcoinapp",storageBucket:"vaultcoinapp.firebasestorage.app",messagingSenderId:"5023266997",appId:"1:5023266997:web:eb3f93c80b42bdacffa6fc"};
+if(!cfg.apiKey.startsWith("PASTE")){
+ const app=initializeApp(cfg),au=getAuth(app),db=getFirestore(app);
+ window.FB={
+  google:()=>signInWithPopup(au,new GoogleAuthProvider()),
+  email:(e,p,n)=>n?createUserWithEmailAndPassword(au,e,p):signInWithEmailAndPassword(au,e,p),
+  out:()=>signOut(au),
+  load:async id=>{const d=await getDoc(doc(db,"users",id));return d.exists()?d.data().d:null},
+  save:async(id,s,name)=>{await setDoc(doc(db,"users",id),{d:JSON.stringify(s)});await setDoc(doc(db,"scores",id),{name:name,life:s.life,stars:s.stars,t:Date.now()})},
+  top:async()=>(await getDocs(query(collection(db,"scores"),orderBy("life","desc"),limit(20)))).docs.map(d=>d.data())
+ };
+ onAuthStateChanged(au,u=>{window.onUser&&window.onUser(u)});
+ window.onFB&&window.onFB();
+}
+</script>
+</body></html>
