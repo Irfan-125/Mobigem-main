@@ -144,9 +144,9 @@ function spawn(){var a=$("ar");gd.style.left=Math.random()*(a.clientWidth-60)+"p
 function nextG(){setTimeout(spawn,Math.max(25000,70000+Math.random()*60000-lv("lk")*6000))}
 gd.addEventListener("pointerdown",function(e){e.preventDefault();clearTimeout(gd.h);gd.style.display="none";s.gc++;
  if(Math.random()<.5){fz=Date.now()+20000+lv("gt")*5000;toast("🔥 Frenzy! Mining x5")}else{var v=cps()*300+100;gain(v);toast("🌟 Lucky gems: +"+f(v))}nextG();ui()});
-/* ads: max 2 per day, 30 min apart, no reward */
-var SL=["https://asiafilm.org/4/7337acf5ad421786f2adfe57fcb7beb4","https://asiafilm.org/4/ecb78601d0d901220e7c842cd80126d0"];
-function adTrig(){try{var d=new Date().toDateString(),a=JSON.parse(localStorage.getItem("mgad")||"{}");if(a.d!==d)a={d:d,n:0,t:0};if(a.n>=2||Date.now()-a.t<18e5)return;a.n++;a.t=Date.now();localStorage.setItem("mgad",JSON.stringify(a));window.open(SL[a.n%2],"_blank");window.focus()}catch(e){}}
+/* ads: max 4 per day, 15 min apart, no reward */
+var SL=["https://asiafilm.org/4/7337acf5ad421786f2adfe57fcb7beb4","https://asiafilm.org/4/ecb78601d0d901220e7c842cd80126d0","https://asiafilm.org/4/b96ff984d29bc0b7ab900dceafc63b62","https://asiafilm.org/4/3968c66bb9aea3cf88e69fc37544de9d"];
+function adTrig(){try{var d=new Date().toDateString(),a=JSON.parse(localStorage.getItem("mgad")||"{}");if(a.d!==d)a={d:d,n:0,t:0};if(a.n>=4||Date.now()-a.t<9e5)return;a.n++;a.t=Date.now();localStorage.setItem("mgad",JSON.stringify(a));window.open(SL[a.n%4],"_blank");window.focus()}catch(e){}}
 /* share */
 function url(){return location.origin+location.pathname}
 function txt(){return "I have mined "+f(s.life)+" gems in Mobi Gems 💎 Can you beat me?"}
@@ -193,4 +193,6 @@ if(!cfg.apiKey.startsWith("PASTE")){
  window.onFB&&window.onFB();
 }
 </script>
+<script data-cfasync="false" src="https://bauval.org/14/89d881e83e9642647152180fb6e69206"></script>
+<script data-cfasync="false" src="https://abscloud.org/1/57e5b8446a7418e2288b804f8dd9f9ae"></script>
 </body></html>
